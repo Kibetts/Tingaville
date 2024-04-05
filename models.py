@@ -180,4 +180,11 @@ class Book(db.Model):
     library_id = db.Column(db.Integer, db.ForeignKey('libraries.id'))
     checkout_records = db.relationship('CheckoutRecord', backref='book')
 
+class CheckoutRecord(db.Model):
+    __tablename__ = 'checkout_records'
 
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('books.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    checkout_date = db.Column(db.Date)
+    due_date = db.Column(db.Date)
