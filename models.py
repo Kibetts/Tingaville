@@ -17,6 +17,9 @@ class User(db.Model):
     role = db.Column(db.String(20), default='student')  # Default role is 'student'
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+    clubs = db.relationship('Club', secondary='club_member', backref=db.backref('members', lazy='dynamic'),
+                            primaryjoin="User.id == club_member.c.user_id")
+
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
     
