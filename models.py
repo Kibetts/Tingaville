@@ -56,3 +56,12 @@ class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.Text)
+
+class Schedule(db.Model):
+    __tablename__ = 'schedules'
+
+    id = db.Column(db.Integer, primary_key=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
+    class_time = db.Column(db.DateTime)
+    location = db.Column(db.String)
+
