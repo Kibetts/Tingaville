@@ -119,3 +119,14 @@ class Message(db.Model):
     content = db.Column(db.Text)
     sent_at = db.Column(db.DateTime)
     sender = db.relationship('User', foreign_keys=[sender_id], primaryjoin='Message.sender_id == User.id', backref=backref('sent_messages', lazy='dynamic'))
+
+class Forum(db.Model):
+    __tablename__ = 'forums'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.Text)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
+    subject = db.relationship('Subject', backref=backref('forums', lazy='dynamic'))
+
+
