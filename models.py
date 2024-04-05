@@ -43,3 +43,10 @@ class Teacher(db.Model):
     created_at = db.Column(db.DateTime)
     role = db.Column(db.String, default='teacher')
 
+class Class(db.Model):
+    __tablename__ = 'classes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    grade_level = db.Column(db.Integer)
+
