@@ -50,3 +50,9 @@ class Class(db.Model):
     name = db.Column(db.String)
     grade_level = db.Column(db.Integer)
 
+class Subject(db.Model):
+    __tablename__ = 'subjects'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.Text)
