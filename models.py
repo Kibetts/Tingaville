@@ -66,6 +66,8 @@ class Class(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     grade_level = db.Column(db.Integer)
+    students = db.relationship('Student', secondary='student_class', back_populates='classes')
+    schedule = db.relationship('Schedule', backref='class')
 
 class Subject(db.Model):
     __tablename__ = 'subjects'
