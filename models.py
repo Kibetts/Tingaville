@@ -52,6 +52,13 @@ class Teacher(db.Model):
     phone_number = db.Column(db.Integer)
     created_at = db.Column(db.DateTime)
     role = db.Column(db.String, default='teacher')
+    subjects = db.relationship('Subject', secondary='teacher_subject', back_populates='teachers')
+
+teacher_subject = db.Table(
+    'teacher_subject',
+    db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id'), primary_key=True),
+    db.Column('subject_id', db.Integer, db.ForeignKey('subjects.id'), primary_key=True)
+)
 
 class Class(db.Model):
     __tablename__ = 'classes'
