@@ -31,3 +31,15 @@ class Student(db.Model):
     created_at = db.Column(db.DateTime)
     role = db.Column(db.String, default='student')
     grade = db.Column(db.Integer)    
+
+class Teacher(db.Model):
+    __tablename__ = 'teachers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    email = db.Column(db.String)
+    password = db.Column(db.String)
+    phone_number = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime)
+    role = db.Column(db.String, default='teacher')
+
