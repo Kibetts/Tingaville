@@ -84,6 +84,8 @@ class Schedule(db.Model):
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
     class_time = db.Column(db.DateTime)
     location = db.Column(db.String)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    teacher = db.relationship('Teacher', backref=backref('schedules', lazy='dynamic'))
 
 class Grade(db.Model):
     __tablename__ = 'grades'
