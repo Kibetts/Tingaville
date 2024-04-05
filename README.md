@@ -1,9 +1,9 @@
 
-# School managenent system
+# School Managenent System
 
 ### By Brian Kibet
 
-This is school management system project.
+This is a school management system project.
 
 ## Table of Content
 
