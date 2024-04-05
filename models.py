@@ -16,3 +16,6 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='student')  # Default role is 'student'
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
