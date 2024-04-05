@@ -94,6 +94,8 @@ class Grade(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
     grade = db.Column(db.Float)
+    student = db.relationship('Student', backref=backref('grades', lazy='dynamic'))
+    subject = db.relationship('Subject', backref=backref('grades', lazy='dynamic'))
 
 class News(db.Model):
     __tablename__ = 'news'
