@@ -138,4 +138,28 @@ club_member = db.Table(
     info={'extend_existing': True}
 )
 
+class Club(db.Model):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'clubs'
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.Text)
+
+
+class Sports(db.Model):
+    __tablename__ = 'sports'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.Text)
+
+class SportsEvent(db.Model):
+    __tablename__ = 'sports_events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
+    location = db.Column(db.String)
+    sport_id = db.Column(db.Integer, db.ForeignKey('sports.id'))
