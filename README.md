@@ -37,6 +37,6 @@ Under this software license agreement, the author grants to the user a non exclu
 
 ## Author's Info
 
-### Brian Kibet &copy [2023]
+### Brian Kibet &copy; [2023]
 
 
