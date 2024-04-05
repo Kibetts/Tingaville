@@ -75,6 +75,7 @@ class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.Text)
+    teachers = db.relationship('Teacher', secondary='teacher_subject', back_populates='subjects')
 
 class Schedule(db.Model):
     __tablename__ = 'schedules'
