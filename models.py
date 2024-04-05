@@ -72,3 +72,21 @@ class Grade(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
     grade = db.Column(db.Float)
+
+class News(db.Model):
+    __tablename__ = 'news'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    content = db.Column(db.Text)
+    created_at = db.Column(db.DateTime)
+
+class Event(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
+    location = db.Column(db.String)
+    description = db.Column(db.Text)
