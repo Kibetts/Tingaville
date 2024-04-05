@@ -35,6 +35,13 @@ class Student(db.Model):
     role = db.Column(db.String, default='student')
     grade = db.Column(db.Integer)    
 
+    classes = db.relationship('Class', secondary='student_class', back_populates='students')
+
+student_class = db.Table('student_class',
+    db.Column('student_id', db.Integer, db.ForeignKey('students.id'), primary_key=True),
+    db.Column('class_id', db.Integer, db.ForeignKey('classes.id'), primary_key=True)
+) 
+
 class Teacher(db.Model):
     __tablename__ = 'teachers'
 
