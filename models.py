@@ -90,3 +90,23 @@ class Event(db.Model):
     time = db.Column(db.Time)
     location = db.Column(db.String)
     description = db.Column(db.Text)
+
+class File(db.Model):
+    __tablename__ = 'files'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    file_path = db.Column(db.String)
+    description = db.Column(db.Text)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
+    subject = db.relationship('Subject', backref=backref('files', lazy='dynamic'))
+
+class Link(db.Model):
+    __tablename__ = 'links'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    url = db.Column(db.String)
+    description = db.Column(db.Text)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
+    subject = db.relationship('Subject', backref=backref('links', lazy='dynamic'))
