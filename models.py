@@ -163,3 +163,21 @@ class SportsEvent(db.Model):
     time = db.Column(db.Time)
     location = db.Column(db.String)
     sport_id = db.Column(db.Integer, db.ForeignKey('sports.id'))
+
+class Library(db.Model):
+    __tablename__ = 'libraries'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.Text)
+
+class Book(db.Model):
+    __tablename__ = 'books'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    author = db.Column(db.String)
+    library_id = db.Column(db.Integer, db.ForeignKey('libraries.id'))
+    checkout_records = db.relationship('CheckoutRecord', backref='book')
+
+
