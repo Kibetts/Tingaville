@@ -129,4 +129,13 @@ class Forum(db.Model):
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
     subject = db.relationship('Subject', backref=backref('forums', lazy='dynamic'))
 
+club_member = db.Table(
+    'club_member',
+    db.Column('club_id', db.Integer, db.ForeignKey('clubs.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),  
+    db.ForeignKeyConstraint(['club_id'], ['clubs.id']),
+    db.ForeignKeyConstraint(['user_id'], ['users.id']),  
+    info={'extend_existing': True}
+)
+
 
