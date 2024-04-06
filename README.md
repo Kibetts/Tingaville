@@ -26,7 +26,7 @@ This is a backend architecture for a school management system, used to create, s
 
 ## Technology used
 
-* Python - Used to add logic.
+* Python - Used to add logic and create CRUD endpoints.
 * Flask - Used to create table models.
 * SQLAlchemy- used to create and manage database
 
