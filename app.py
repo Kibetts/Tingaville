@@ -72,3 +72,39 @@ class UserLogin(Resource):
 
         return {'error': 'Invalid credentials'}, 401
     
+# Class Resource
+class ClassResource(Resource):
+    @jwt_required()
+    def get(self):
+        classes = Class.query.all()
+        return [c.to_dict() for c in classes]
+
+    @role_required(['admin', 'teacher'])
+    def post(self):
+        data = request.get_json()
+        new_class = Class(**data)
+        db.session.add(new_class)
+        db.session.commit()
+        return new_class.to_dict(), 201
+
+    @role_required(['admin', 'teacher'])
+    def patch(self, class_id):
+        data = request.get_json()
+        class_obj = Class.query.get(class_id)
+        if class_obj:
+            for key, value in data.items():
+                setattr(class_obj, key, value)
+            db.session.commit()
+            return class_obj.to_dict(), 200
+        return {'error': 'Class not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, class_id):
+        class_obj = Class.query.get(class_id)
+        if class_obj:
+            db.session.delete(class_obj)
+            db.session.commit()
+            return {'message': 'Class deleted'}, 200
+        return {'error': 'Class not found'}, 404
+    
+
