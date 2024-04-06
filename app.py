@@ -52,3 +52,23 @@ class UserRegister(Resource):
         db.session.add(user)
         db.session.commit()
         return {'message': 'User created'}, 201
+    
+    # User Login
+class UserLogin(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        username = data.get('username')
+        password = data.get('password')
+
+        if not (email or username):
+            return {'error': 'Either email or username is required for login'}, 400
+
+        user = find_user(email, username)
+
+        if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            access_token = create_access_token(identity=user.id, additional_claims={'role': user.role})
+            return {'access_token': access_token}
+
+        return {'error': 'Invalid credentials'}, 401
+    
