@@ -22,3 +22,33 @@ jwt = JWTManager(app)
 migrate = Migrate(app, db)
 
 CORS(app)
+
+# Home
+class Home(Resource):
+    def get(self):
+        return 'Welcome to Tinga Springs Schools'
+
+# User Register
+class UserRegister(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        username = data.get('username')
+        password = data.get('password')
+        role = 'student'  # Default role is 'student'
+
+        if not email or not username or not password:
+            return {'error': 'Email, username, and password are required'}, 400
+
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        # Check if the user is a teacher
+        if Teacher.query.filter_by(email=email).first():
+            role = 'teacher'  # Assign the role of "teacher" to the user
+        else:
+            return {'error': 'Only teachers can be registered'}, 400
+
+        user = User(email=email, username=username, password=hashed_password.decode('utf-8'), role=role)
+        db.session.add(user)
+        db.session.commit()
+        return {'message': 'User created'}, 201
