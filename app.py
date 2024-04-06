@@ -16,3 +16,9 @@ app.config['JWT_SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+api = Api(app)
+jwt = JWTManager(app)
+migrate = Migrate(app, db)
+
+CORS(app)
