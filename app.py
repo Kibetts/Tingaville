@@ -246,3 +246,38 @@ class FileResource(Resource):
             db.session.commit()
             return {'message': 'File deleted'}, 200
         return {'error': 'File not found'}, 404
+    
+# Link Resource
+class LinkResource(Resource):
+    @jwt_required()
+    def get(self):
+        links = Link.query.all()
+        return [link.to_dict() for link in links]
+
+    @role_required(['admin', 'teacher'])
+    def post(self):
+        data = request.get_json()
+        new_link = Link(**data)
+        db.session.add(new_link)
+        db.session.commit()
+        return new_link.to_dict(), 201
+
+    @role_required(['admin', 'teacher'])
+    def patch(self, link_id):
+        data = request.get_json()
+        link_obj = Link.query.get(link_id)
+        if link_obj:
+            for key, value in data.items():
+                setattr(link_obj, key, value)
+            db.session.commit()
+            return link_obj.to_dict(), 200
+        return {'error': 'Link not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, link_id):
+        link_obj = Link.query.get(link_id)
+        if link_obj:
+            db.session.delete(link_obj)
+            db.session.commit()
+            return {'message': 'Link deleted'}, 200
+        return {'error': 'Link not found'}, 404
