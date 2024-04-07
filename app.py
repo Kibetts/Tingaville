@@ -388,3 +388,38 @@ class SportsResource(Resource):
             db.session.commit()
             return {'message': 'Sport deleted'}, 200
         return {'error': 'Sport not found'}, 404
+    
+# Library Resource
+class LibraryResource(Resource):
+    @jwt_required()
+    def get(self):
+        libraries = Library.query.all()
+        return [l.to_dict() for l in libraries]
+
+    @role_required(['admin'])
+    def post(self):
+        data = request.get_json()
+        new_library = Library(**data)
+        db.session.add(new_library)
+        db.session.commit()
+        return new_library.to_dict(), 201
+
+    @role_required(['admin'])
+    def patch(self, library_id):
+        data = request.get_json()
+        library_obj = Library.query.get(library_id)
+        if library_obj:
+            for key, value in data.items():
+                setattr(library_obj, key, value)
+            db.session.commit()
+            return library_obj.to_dict(), 200
+        return {'error': 'Library not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, library_id):
+        library_obj = Library.query.get(library_id)
+        if library_obj:
+            db.session.delete(library_obj)
+            db.session.commit()
+            return {'message': 'Library deleted'}, 200
+        return {'error': 'Library not found'}, 404
