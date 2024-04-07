@@ -517,3 +517,27 @@ class GradeResource(Resource):
             db.session.commit()
             return {'message': 'Grade deleted'}, 200
         return {'error': 'Grade not found'}, 404
+    
+# ScheduleResource 
+class ScheduleResource(Resource):
+    @jwt_required()
+    def get(self):
+        schedules = Schedule.query.all()
+        return [schedule.to_dict() for schedule in schedules]
+
+    @role_required(['admin', 'teacher', 'student'])
+    def post(self):
+        data = request.get_json()
+        new_schedule = Schedule(**data)
+        db.session.add(new_schedule)
+        db.session.commit()
+        return new_schedule.to_dict(), 201
+
+    @role_required(['admin'])
+    def delete(self, schedule_id):
+        schedule_obj = Schedule.query.get(schedule_id)
+        if schedule_obj:
+            db.session.delete(schedule_obj)
+            db.session.commit()
+            return {'message': 'Schedule deleted'}, 200
+        return {'error': 'Schedule not found'}, 404
