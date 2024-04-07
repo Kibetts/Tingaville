@@ -329,3 +329,27 @@ class ForumResource(Resource):
             db.session.commit()
             return {'message': 'Forum deleted'}, 200
         return {'error': 'Forum not found'}, 404
+    
+# ClubResource 
+class ClubResource(Resource):
+    @jwt_required()
+    def get(self):
+        clubs = Club.query.all()
+        return [club.to_dict() for club in clubs]
+
+    @role_required(['admin', 'teacher', 'student'])
+    def post(self):
+        data = request.get_json()
+        new_club = Club(**data)
+        db.session.add(new_club)
+        db.session.commit()
+        return new_club.to_dict(), 201
+
+    @role_required(['admin'])
+    def delete(self, club_id):
+        club_obj = Club.query.get(club_id)
+        if club_obj:
+            db.session.delete(club_obj)
+            db.session.commit()
+            return {'message': 'Club deleted'}, 200
+        return {'error': 'Club not found'}, 404
