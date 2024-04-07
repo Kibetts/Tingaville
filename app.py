@@ -353,3 +353,38 @@ class ClubResource(Resource):
             db.session.commit()
             return {'message': 'Club deleted'}, 200
         return {'error': 'Club not found'}, 404
+    
+# Sports Resource
+class SportsResource(Resource):
+    @jwt_required()
+    def get(self):
+        sports = Sports.query.all()
+        return [s.to_dict() for s in sports]
+
+    @role_required(['admin'])
+    def post(self):
+        data = request.get_json()
+        new_sport = Sports(**data)
+        db.session.add(new_sport)
+        db.session.commit()
+        return new_sport.to_dict(), 201
+
+    @role_required(['admin'])
+    def patch(self, sport_id):
+        data = request.get_json()
+        sport_obj = Sports.query.get(sport_id)
+        if sport_obj:
+            for key, value in data.items():
+                setattr(sport_obj, key, value)
+            db.session.commit()
+            return sport_obj.to_dict(), 200
+        return {'error': 'Sport not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, sport_id):
+        sport_obj = Sports.query.get(sport_id)
+        if sport_obj:
+            db.session.delete(sport_obj)
+            db.session.commit()
+            return {'message': 'Sport deleted'}, 200
+        return {'error': 'Sport not found'}, 404
