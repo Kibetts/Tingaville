@@ -107,4 +107,38 @@ class ClassResource(Resource):
             return {'message': 'Class deleted'}, 200
         return {'error': 'Class not found'}, 404
     
+# Subject Resource
+class SubjectResource(Resource):
+    @jwt_required()
+    def get(self):
+        subjects = Subject.query.all()
+        return [subject.to_dict() for subject in subjects]
+
+    @role_required(['admin'])
+    def post(self):
+        data = request.get_json()
+        new_subject = Subject(**data)
+        db.session.add(new_subject)
+        db.session.commit()
+        return new_subject.to_dict(), 201
+
+    @role_required(['admin'])
+    def patch(self, subject_id):
+        data = request.get_json()
+        subject_obj = Subject.query.get(subject_id)
+        if subject_obj:
+            for key, value in data.items():
+                setattr(subject_obj, key, value)
+            db.session.commit()
+            return subject_obj.to_dict(), 200
+        return {'error': 'Subject not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, subject_id):
+        subject_obj = Subject.query.get(subject_id)
+        if subject_obj:
+            db.session.delete(subject_obj)
+            db.session.commit()
+            return {'message': 'Subject deleted'}, 200
+        return {'error': 'Subject not found'}, 404
 
