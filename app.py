@@ -493,3 +493,27 @@ class CheckoutRecordResource(Resource):
             db.session.commit()
             return {'message': 'Checkout record deleted'}, 200
         return {'error': 'Checkout record not found'}, 404
+
+# GradeResource 
+class GradeResource(Resource):
+    @jwt_required()
+    def get(self):
+        grades = Grade.query.all()
+        return [grade.to_dict() for grade in grades]
+
+    @role_required(['admin', 'teacher', 'student'])
+    def post(self):
+        data = request.get_json()
+        new_grade = Grade(**data)
+        db.session.add(new_grade)
+        db.session.commit()
+        return new_grade.to_dict(), 201
+
+    @role_required(['admin'])
+    def delete(self, grade_id):
+        grade_obj = Grade.query.get(grade_id)
+        if grade_obj:
+            db.session.delete(grade_obj)
+            db.session.commit()
+            return {'message': 'Grade deleted'}, 200
+        return {'error': 'Grade not found'}, 404
