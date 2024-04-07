@@ -176,3 +176,38 @@ class NewsResource(Resource):
             db.session.commit()
             return {'message': 'News deleted'}, 200
         return {'error': 'News not found'}, 404
+
+# Event Resource
+class EventResource(Resource):
+    @jwt_required()
+    def get(self):
+        events = Event.query.all()
+        return [event.to_dict() for event in events]
+
+    @role_required(['admin', 'teacher'])
+    def post(self):
+        data = request.get_json()
+        new_event = Event(**data)
+        db.session.add(new_event)
+        db.session.commit()
+        return new_event.to_dict(), 201
+
+    @role_required(['admin', 'teacher'])
+    def patch(self, event_id):
+        data = request.get_json()
+        event_obj = Event.query.get(event_id)
+        if event_obj:
+            for key, value in data.items():
+                setattr(event_obj, key, value)
+            db.session.commit()
+            return event_obj.to_dict(), 200
+        return {'error': 'Event not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, event_id):
+        event_obj = Event.query.get(event_id)
+        if event_obj:
+            db.session.delete(event_obj)
+            db.session.commit()
+            return {'message': 'Event deleted'}, 200
+        return {'error': 'Event not found'}, 404
