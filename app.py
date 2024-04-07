@@ -561,3 +561,9 @@ api.add_resource(BookResource, '/books', '/books/<int:book_id>')
 api.add_resource(CheckoutRecordResource, '/checkout-records', '/checkout-records/<int:checkout_record_id>')
 api.add_resource(GradeResource, '/grades', '/grades/<int:grade_id>')
 api.add_resource(ScheduleResource, '/schedules', '/schedules/<int:schedule_id>')
+
+with app.app_context():
+    db.create_all()
+
+if __name__ == '__main__':
+    app.run(debug=True)
