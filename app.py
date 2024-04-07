@@ -142,3 +142,37 @@ class SubjectResource(Resource):
             return {'message': 'Subject deleted'}, 200
         return {'error': 'Subject not found'}, 404
 
+# News Resource
+class NewsResource(Resource):
+    @jwt_required()
+    def get(self):
+        news_items = News.query.all()
+        return [news.to_dict() for news in news_items]
+
+    @role_required(['admin', 'teacher'])
+    def post(self):
+        data = request.get_json()
+        new_news = News(**data)
+        db.session.add(new_news)
+        db.session.commit()
+        return new_news.to_dict(), 201
+
+    @role_required(['admin', 'teacher'])
+    def patch(self, news_id):
+        data = request.get_json()
+        news_obj = News.query.get(news_id)
+        if news_obj:
+            for key, value in data.items():
+                setattr(news_obj, key, value)
+            db.session.commit()
+            return news_obj.to_dict(), 200
+        return {'error': 'News not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, news_id):
+        news_obj = News.query.get(news_id)
+        if news_obj:
+            db.session.delete(news_obj)
+            db.session.commit()
+            return {'message': 'News deleted'}, 200
+        return {'error': 'News not found'}, 404
