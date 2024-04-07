@@ -305,3 +305,27 @@ class MessageResource(Resource):
             db.session.commit()
             return {'message': 'Message deleted'}, 200
         return {'error': 'Message not found'}, 404
+
+# ForumResource 
+class ForumResource(Resource):
+    @jwt_required()
+    def get(self):
+        forums = Forum.query.all()
+        return [forum.to_dict() for forum in forums]
+
+    @role_required(['admin', 'teacher', 'student'])
+    def post(self):
+        data = request.get_json()
+        new_forum = Forum(**data)
+        db.session.add(new_forum)
+        db.session.commit()
+        return new_forum.to_dict(), 201
+
+    @role_required(['admin'])
+    def delete(self, forum_id):
+        forum_obj = Forum.query.get(forum_id)
+        if forum_obj:
+            db.session.delete(forum_obj)
+            db.session.commit()
+            return {'message': 'Forum deleted'}, 200
+        return {'error': 'Forum not found'}, 404
