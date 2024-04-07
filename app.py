@@ -458,3 +458,38 @@ class BookResource(Resource):
             db.session.commit()
             return {'message': 'Book deleted'}, 200
         return {'error': 'Book not found'}, 404
+
+# Checkout Record Resource
+class CheckoutRecordResource(Resource):
+    @jwt_required()
+    def get(self):
+        checkout_records = CheckoutRecord.query.all()
+        return [cr.to_dict() for cr in checkout_records]
+
+    @jwt_required()
+    def post(self):
+        data = request.get_json()
+        new_checkout_record = CheckoutRecord(**data)
+        db.session.add(new_checkout_record)
+        db.session.commit()
+        return new_checkout_record.to_dict(), 201
+
+    @jwt_required()
+    def patch(self, checkout_record_id):
+        data = request.get_json()
+        checkout_record_obj = CheckoutRecord.query.get(checkout_record_id)
+        if checkout_record_obj:
+            for key, value in data.items():
+                setattr(checkout_record_obj, key, value)
+            db.session.commit()
+            return checkout_record_obj.to_dict(), 200
+        return {'error': 'Checkout record not found'}, 404
+
+    @jwt_required()
+    def delete(self, checkout_record_id):
+        checkout_record_obj = CheckoutRecord.query.get(checkout_record_id)
+        if checkout_record_obj:
+            db.session.delete(checkout_record_obj)
+            db.session.commit()
+            return {'message': 'Checkout record deleted'}, 200
+        return {'error': 'Checkout record not found'}, 404
