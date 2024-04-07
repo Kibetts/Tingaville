@@ -211,3 +211,38 @@ class EventResource(Resource):
             db.session.commit()
             return {'message': 'Event deleted'}, 200
         return {'error': 'Event not found'}, 404
+
+# File Resource
+class FileResource(Resource):
+    @jwt_required()
+    def get(self):
+        files = File.query.all()
+        return [file.to_dict() for file in files]
+
+    @role_required(['admin', 'teacher'])
+    def post(self):
+        data = request.get_json()
+        new_file = File(**data)
+        db.session.add(new_file)
+        db.session.commit()
+        return new_file.to_dict(), 201
+
+    @role_required(['admin', 'teacher'])
+    def patch(self, file_id):
+        data = request.get_json()
+        file_obj = File.query.get(file_id)
+        if file_obj:
+            for key, value in data.items():
+                setattr(file_obj, key, value)
+            db.session.commit()
+            return file_obj.to_dict(), 200
+        return {'error': 'File not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, file_id):
+        file_obj = File.query.get(file_id)
+        if file_obj:
+            db.session.delete(file_obj)
+            db.session.commit()
+            return {'message': 'File deleted'}, 200
+        return {'error': 'File not found'}, 404
