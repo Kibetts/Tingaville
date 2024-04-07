@@ -541,3 +541,23 @@ class ScheduleResource(Resource):
             db.session.commit()
             return {'message': 'Schedule deleted'}, 200
         return {'error': 'Schedule not found'}, 404
+    
+# Endpoints
+api.add_resource(Home, '/')
+api.add_resource(UserRegister, '/register')
+api.add_resource(UserLogin, '/login')
+api.add_resource(ClassResource, '/classes', '/classes/<int:class_id>')
+api.add_resource(SubjectResource, '/subjects', '/subjects/<int:subject_id>')
+api.add_resource(NewsResource, '/news', '/news/<int:news_id>')
+api.add_resource(EventResource, '/events', '/events/<int:event_id>')
+api.add_resource(FileResource, '/files', '/files/<int:file_id>')
+api.add_resource(LinkResource, '/links', '/links/<int:link_id>')
+api.add_resource(MessageResource, '/messages', '/messages/<int:message_id>')
+api.add_resource(ForumResource, '/forums', '/forums/<int:forum_id>')
+api.add_resource(ClubResource, '/clubs', '/clubs/<int:club_id>')
+api.add_resource(SportsResource, '/sports', '/sports/<int:sport_id>')
+api.add_resource(LibraryResource, '/libraries', '/libraries/<int:library_id>')
+api.add_resource(BookResource, '/books', '/books/<int:book_id>')
+api.add_resource(CheckoutRecordResource, '/checkout-records', '/checkout-records/<int:checkout_record_id>')
+api.add_resource(GradeResource, '/grades', '/grades/<int:grade_id>')
+api.add_resource(ScheduleResource, '/schedules', '/schedules/<int:schedule_id>')
