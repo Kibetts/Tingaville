@@ -423,3 +423,38 @@ class LibraryResource(Resource):
             db.session.commit()
             return {'message': 'Library deleted'}, 200
         return {'error': 'Library not found'}, 404
+    
+# Book Resource
+class BookResource(Resource):
+    @jwt_required()
+    def get(self):
+        books = Book.query.all()
+        return [b.to_dict() for b in books]
+
+    @role_required(['admin'])
+    def post(self):
+        data = request.get_json()
+        new_book = Book(**data)
+        db.session.add(new_book)
+        db.session.commit()
+        return new_book.to_dict(), 201
+
+    @role_required(['admin'])
+    def patch(self, book_id):
+        data = request.get_json()
+        book_obj = Book.query.get(book_id)
+        if book_obj:
+            for key, value in data.items():
+                setattr(book_obj, key, value)
+            db.session.commit()
+            return book_obj.to_dict(), 200
+        return {'error': 'Book not found'}, 404
+
+    @role_required(['admin'])
+    def delete(self, book_id):
+        book_obj = Book.query.get(book_id)
+        if book_obj:
+            db.session.delete(book_obj)
+            db.session.commit()
+            return {'message': 'Book deleted'}, 200
+        return {'error': 'Book not found'}, 404
