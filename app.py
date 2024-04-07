@@ -281,3 +281,27 @@ class LinkResource(Resource):
             db.session.commit()
             return {'message': 'Link deleted'}, 200
         return {'error': 'Link not found'}, 404
+    
+# MessageResource
+class MessageResource(Resource):
+    @jwt_required()
+    def get(self):
+        messages = Message.query.all()
+        return [message.to_dict() for message in messages]
+
+    @role_required(['admin', 'teacher', 'student'])
+    def post(self):
+        data = request.get_json()
+        new_message = Message(**data)
+        db.session.add(new_message)
+        db.session.commit()
+        return new_message.to_dict(), 201
+
+    @role_required(['admin'])
+    def delete(self, message_id):
+        message_obj = Message.query.get(message_id)
+        if message_obj:
+            db.session.delete(message_obj)
+            db.session.commit()
+            return {'message': 'Message deleted'}, 200
+        return {'error': 'Message not found'}, 404
