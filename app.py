@@ -23,6 +23,41 @@ migrate = Migrate(app, db)
 
 CORS(app)
 
+
+# Authentication and role-based access control
+@jwt.user_identity_loader
+def user_identity_lookup(user_id):
+    return user_id
+
+def user_lookup_callback(_jwt_header, jwt_data):
+    user_id = jwt_data["sub"]
+    role = jwt_data["role"]
+
+    if role == 'student':
+        return Student.query.get(user_id)
+    elif role == 'teacher':
+        return Teacher.query.get(user_id)
+    else:
+        return None  
+
+def role_required(allowed_roles):
+    def decorator(fn):
+        @jwt_required()
+        def wrapper(*args, **kwargs):
+            user_role = get_jwt_identity()['role']
+            if user_role not in allowed_roles:
+                return {'error': 'Unauthorized access'}, 403
+            return fn(*args, **kwargs)
+        return wrapper
+    return decorator
+
+def find_user(email, username):
+    if email:
+        return User.query.filter_by(email=email).first()
+    elif username:
+        return User.query.filter_by(username=username).first()
+    return None
+
 # Home
 class Home(Resource):
     def get(self):
